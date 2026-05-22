@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+
+# Environment and editor files
+.env
+.env.*
+.vscode/
+.idea/
+
+# OS artifacts
+.DS_Store
+
+# Database and logs
+*.sqlite3
+*.db
+*.log
+
+# Python test artifacts
+.pytest_cache/
+htmlcov/
+
+# Packaging
+dist/
+build/
+*.egg-info/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
