@@ -309,14 +309,21 @@ def competitors_with_rankings(connectable: Connectable = None) -> pd.DataFrame:
         """
         SELECT
             competitor.competitor_id,
-            competitor.name,
+            CASE
+                WHEN CHARINDEX(',', competitor.name) > 0
+                THEN LTRIM(SUBSTRING(competitor.name, CHARINDEX(',', competitor.name) + 1, LEN(competitor.name)))
+                     + ' '
+                     + LTRIM(SUBSTRING(competitor.name, 1, CHARINDEX(',', competitor.name) - 1))
+                ELSE competitor.name
+            END AS name,
             competitor.country,
             competitor.country_code,
             competitor.abbreviation,
             ranking.rank,
             ranking.points,
             ranking.movement,
-            ranking.competitions_played
+            ranking.competitions_played,
+            competitor.gender
         FROM competitors AS competitor
         JOIN competitor_rankings AS ranking
             ON ranking.competitor_id = competitor.competitor_id
@@ -462,4 +469,5 @@ def _resolve_engine(connectable: Connectable) -> tuple[Engine, bool]:
         raise ValueError(
             "Provide a database URL/Engine or set the DATABASE_URL environment variable."
         )
-    return create_engine(database_url, pool_pre_ping=True), True
+    from tennis_etl.database import build_engine
+    return build_engine(database_url), True

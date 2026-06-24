@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import logging
 import os
-
+from dotenv import load_dotenv
 from tennis_etl.database import build_engine, create_schema
-
+load_dotenv()
 LOGGER = logging.getLogger(__name__)
 
 

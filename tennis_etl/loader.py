@@ -88,7 +88,7 @@ def load_all(
                 Competitor.__table__,
                 competitors,
                 ["competitor_id"],
-                ["name", "country", "country_code", "abbreviation"],
+                ["name", "country", "country_code", "abbreviation", "gender"],
             ),
             rankings=upsert_rows(
                 session,

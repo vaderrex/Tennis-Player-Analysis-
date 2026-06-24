@@ -26,3 +26,14 @@ build/
 
 # Notebook checkpoints
 .ipynb_checkpoints/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Generated ETL output (CSV files)
+etl_output/
+
+# API response cache
+api_responses/

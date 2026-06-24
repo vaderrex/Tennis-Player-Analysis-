@@ -8,6 +8,21 @@ from typing import Any
 JsonObject = Mapping[str, Any]
 
 
+def _normalize_name(name: str | None) -> str | None:
+    """
+    Convert "Last, First" (SportRadar format) to "First Last".
+    Leaves names that contain no comma unchanged.
+    """
+    if not name:
+        return name
+    if "," in name:
+        parts = name.split(",", 1)
+        first = parts[1].strip()
+        last = parts[0].strip()
+        return f"{first} {last}"
+    return name
+
+
 def transform_competitions(
     payload: JsonObject,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -81,6 +96,7 @@ def transform_doubles_rankings(
     rankings: dict[str, dict[str, Any]] = {}
 
     for ranking_group in _ranking_groups(payload):
+        gender = ranking_group.get("gender")
         for item in _nested_items(ranking_group, "competitor_rankings"):
             competitor = item.get("competitor") or {}
             competitor_id = competitor.get("id")
@@ -90,10 +106,11 @@ def transform_doubles_rankings(
 
             competitors[competitor_id] = {
                 "competitor_id": competitor_id,
-                "name": competitor.get("name") or "Unknown",
+                "name": _normalize_name(competitor.get("name")) or "Unknown",
                 "country": competitor.get("country"),
                 "country_code": competitor.get("country_code"),
                 "abbreviation": competitor.get("abbreviation"),
+                "gender": gender,
             }
             rankings[competitor_id] = {
                 "rank": rank,

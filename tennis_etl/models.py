@@ -2,8 +2,20 @@
 
 from __future__ import annotations
 
-from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import (
+    ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
+    DateTime,
+    Date,
+    CHAR,
+    BigInteger,
+    NVARCHAR,
+    text,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from datetime import datetime, date
 
 
 class Base(DeclarativeBase):
@@ -87,6 +99,7 @@ class Competitor(Base):
     country: Mapped[str | None] = mapped_column(String(255), nullable=True)
     country_code: Mapped[str | None] = mapped_column(String(16), nullable=True)
     abbreviation: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    gender: Mapped[str | None] = mapped_column(String(40), nullable=True)
 
     ranking: Mapped["CompetitorRanking | None"] = relationship(
         back_populates="competitor"
@@ -119,3 +132,10 @@ class CompetitorRanking(Base):
     )
 
     competitor: Mapped["Competitor"] = relationship(back_populates="ranking")
+
+
+# ============================================================================
+# STAR SCHEMA DIMENSION TABLES
+# ============================================================================
+# Note: Star Schema tables (DIM_Time, DIM_Category, DIM_Competitor, DIM_RankingSeries, FACT_Rankings, STG_Rankings_Raw)
+# are managed by sql/STAR_SCHEMA_DDL.sql to preserve CamelCase naming, indices, and database-side defaults.
